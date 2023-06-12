@@ -17,7 +17,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // Serve static files from the React frontend app
-app.use(express.static(path.join(__dirname, "public")));
+//app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "/client/build")));
 
 app.use("/subjects", subjectRouter);
 app.use("/questions", questionRouter);
@@ -38,6 +39,11 @@ app.use(function (err, req, res, next) {
 	//   // send the error page
 	res.status(err.status || 500);
 	res.send("error");
+	
+	//Heroku
+	app.get("*", (req, res) => {
+		res.sendFile(path.join(__dirname + "/client/build/index.html"));
+	  });
 });
 
 module.exports = app;
